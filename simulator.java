@@ -9,7 +9,7 @@ public class simulator {
 		GUI gui = new GUI();
 		gui.setVisible(true);
 		gui.setSize(500,750);
-		
+		Player player = new Player();
 		
 	}
 
