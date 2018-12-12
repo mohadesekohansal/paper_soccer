@@ -1,4 +1,3 @@
-
 public class Coordinate {
 
 	
@@ -12,10 +11,12 @@ public class Coordinate {
 		
 	}
 	
-	public Coordinate location(){
-		Coordinate cord = new Coordinate(x, y);
-		System.out.println("["+x+","+y+"]");
-		return cord ;
+	public void update(Coordinate cord ,int i, int j) {
+		// TODO Auto-generated method stub
+		cord.x = cord.x + i*57 ;
+		cord.y = cord.y + j*57 ;
+
+		
 	}
 	
 	
