@@ -3,11 +3,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 import javax.swing.*;
 
 public class GUI extends JFrame implements KeyListener{
-
 	Coordinate cord = new Coordinate(245 , 362);
 	final LineComponent lineComp = new LineComponent();
 	Points[]  point = new Points[105];
@@ -89,10 +89,11 @@ public class GUI extends JFrame implements KeyListener{
 		this.add(panel,BorderLayout.CENTER);
 	
 	}
-
-	private void pointInit(Points[] point) {
+//forbidden action
+	public void pointInit(Points[] point) {
 		// TODO Auto-generated method stub
 		for (int i = 0 ; i < 105 ; i++){
+			
 			if(i>98){
 				if(i == 100 && i == 103 ){
 					point[i].adj = 5 ;
@@ -211,40 +212,67 @@ public class GUI extends JFrame implements KeyListener{
 		// TODO Auto-generated method stub
 		
 	}
-
+//get key
+	Random rand=new Random();
+	//int A=rand.nextInt(2);
+	 int flag;
+	public int changeturn(int a){
+		if(a==0){
+			a=1;
+			//System.out.println("changeturn");
+			}
+		else if(a==1)
+			a=0;
+		return a;
+	}
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
+	flag=changeturn(flag);
+	if(flag==0)
+	{
+		System.out.println("player 1 turn.");
+	}
+	else if(flag==1)
+	{
+		System.out.println("player2  turn.");
+	}
+		
 		if(e.getKeyCode() == KeyEvent.VK_D){
 			Eest();
+			//changeturn(flag);
 			
 		}if(e.getKeyCode() == KeyEvent.VK_A){
 			West();
+			//changeturn(flag);
 			
 		}if(e.getKeyCode() == KeyEvent.VK_W){
 			North();
-
+			//changeturn(flag);
 			
 		}if(e.getKeyCode() == KeyEvent.VK_X){
 			South();
-
+			//changeturn(flag);
 			
 		}if(e.getKeyCode() == KeyEvent.VK_E){
 			NorthEast();
+			//changeturn(flag);
 			
 		}if(e.getKeyCode() == KeyEvent.VK_Q){
 			NorthWest();
+			//changeturn(flag);
 			
 		}if(e.getKeyCode() == KeyEvent.VK_C){
 			SouthEast();
-			
+			//changeturn(flag);
 
 		}if(e.getKeyCode() == KeyEvent.VK_Z){
 			SouthWest();
+			//changeturn(flag);
 			
 		}
 	}
-
+//actions;
 	private void SouthWest() {
 		// TODO Auto-generated method stub
 		if(point[pointNum].z){
@@ -257,6 +285,8 @@ public class GUI extends JFrame implements KeyListener{
 				point[pointNum].adj ++ ;
 				pointNum = pointNum  + 8 ;
 				point[pointNum].e = false ;
+				if(point[pointNum].adj<=1)
+					changeturn(flag);
 				point[pointNum].adj ++ ;
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{
@@ -278,6 +308,8 @@ public class GUI extends JFrame implements KeyListener{
 				point[pointNum].adj ++ ;
 				pointNum = pointNum + 10 ;
 				point[pointNum].q = false ;
+				if(point[pointNum].adj<=1)
+					changeturn(flag);
 				point[pointNum].adj ++ ;
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{				
@@ -300,6 +332,8 @@ public class GUI extends JFrame implements KeyListener{
 				point[pointNum].adj ++ ;
 				pointNum = pointNum - 10 ; 
 				point[pointNum].c = false ;
+				if(point[pointNum].adj<=1)
+					changeturn(flag);
 				point[pointNum].adj ++ ;
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{
@@ -322,6 +356,8 @@ public class GUI extends JFrame implements KeyListener{
 				point[pointNum].adj ++ ;
 				pointNum = pointNum - 8 ; 
 				point[pointNum].z = false ;
+				if(point[pointNum].adj<=1)
+					changeturn(flag);
 				point[pointNum].adj ++ ;
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{
@@ -340,6 +376,8 @@ public class GUI extends JFrame implements KeyListener{
 				lineComp.addLine(cord.x, cord.y, cord.x , cord.y + 57);
 				cord.update(cord ,0 , 1);
 				point[pointNum].x = false ;
+				if(point[pointNum].adj<=1)
+					changeturn(flag);
 				point[pointNum].adj ++ ;
 				pointNum = pointNum + 9 ;
 				point[pointNum].w = false ;
@@ -347,7 +385,7 @@ public class GUI extends JFrame implements KeyListener{
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{
 				lineComp.addLine(cord.x, cord.y, cord.x , cord.y + 57);
-				System.out.println("Player 2 Wins.");
+				System.out.println("Player 2 Wins.it was player " +(flag+1)+"turn");
 			}
 		}
 	}
@@ -361,6 +399,8 @@ public class GUI extends JFrame implements KeyListener{
 				lineComp.addLine(cord.x, cord.y, cord.x , cord.y - 57);
 				cord.update(cord ,0,-1);
 				point[pointNum].w = false ;
+				if(point[pointNum].adj<=1)
+					changeturn(flag);
 				point[pointNum].adj ++ ;
 				pointNum = pointNum - 9 ;
 				point[pointNum].x = false ;
@@ -368,7 +408,7 @@ public class GUI extends JFrame implements KeyListener{
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{
 				lineComp.addLine(cord.x, cord.y, cord.x , cord.y - 57);
-				System.out.println("Player 1 Wins.");
+				System.out.println("Player 1 Wins. it was player "+(flag+1)+"turn");
 			}
 		}		
 	}
@@ -381,6 +421,8 @@ public class GUI extends JFrame implements KeyListener{
 			lineComp.addLine(cord.x, cord.y, cord.x - 57, cord.y);
 			cord.update(cord,-1, 0);
 			point[pointNum].a = false ;
+			if(point[pointNum].adj<=1)
+				changeturn(flag);
 			point[pointNum].adj ++ ;
 			pointNum -- ;
 			point[pointNum].d = false ;
@@ -397,11 +439,15 @@ public class GUI extends JFrame implements KeyListener{
 			lineComp.addLine(cord.x, cord.y, cord.x + 57, cord.y);
 			cord.update(cord ,1,0);
 			point[pointNum].d = false ;
+			if(point[pointNum].adj<=1)
+				changeturn(flag);
 			point[pointNum].adj ++ ;
 			pointNum ++ ;
 			point[pointNum].a = false ;
 			point[pointNum].adj ++ ;
 			System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
+			//changeturn(flag);
+			
 		}
 	}
 
@@ -410,5 +456,4 @@ public class GUI extends JFrame implements KeyListener{
 		// TODO Auto-generated method stub
 		
 	}
-	
 }
