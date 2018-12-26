@@ -10,7 +10,7 @@ import javax.swing.*;
 public class GUI extends JFrame implements KeyListener{
 	Coordinate cord = new Coordinate(245 , 362);
 	final LineComponent lineComp = new LineComponent();
-	
+	Action action ;
 	Points[]  point = new Points[105];
 	int pointNum = 49 ;
 	Minimax minimax = new Minimax(pointNum,point);
@@ -252,7 +252,7 @@ public class GUI extends JFrame implements KeyListener{
 		
 		
 		if(e.getKeyCode() == KeyEvent.VK_D){
-			Eest();
+			East();
 			
 			
 		}if(e.getKeyCode() == KeyEvent.VK_A){
@@ -286,8 +286,8 @@ public class GUI extends JFrame implements KeyListener{
 		if(flag==0)
 		{
 			System.out.println("player 1 turn.");
-			minimax.minimax_decision(pointNum);
-
+			action = minimax.minimax_decision(pointNum);
+			Act(action);
 //			randomAct();
 		}
 		else if(flag==1)
@@ -319,7 +319,8 @@ public class GUI extends JFrame implements KeyListener{
 				else
 					{
 						if(flag==0)
-							minimax.minimax_decision(pointNum);
+							action = minimax.minimax_decision(pointNum);
+							Act(action);
 //							randomAct();
 					}
 				}
@@ -330,7 +331,6 @@ public class GUI extends JFrame implements KeyListener{
 				JOptionPane.showMessageDialog(null,"Player 2 Wins.it was not player "+(flag+1)+"turn");
 			}
 		}
-	
 
 	public void SouthEast() {
 		// TODO Auto-generated method stub
@@ -353,7 +353,8 @@ public class GUI extends JFrame implements KeyListener{
 				else
 				{
 					if(flag==0)
-						minimax.minimax_decision(pointNum);
+						action = minimax.minimax_decision(pointNum);
+						Act(action);
 //						randomAct();
 				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
@@ -387,7 +388,8 @@ public class GUI extends JFrame implements KeyListener{
 				else
 				{
 					if(flag==0)
-						minimax.minimax_decision(pointNum);
+						action = minimax.minimax_decision(pointNum);
+						Act(action);
 //						randomAct();
 				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
@@ -420,7 +422,8 @@ public class GUI extends JFrame implements KeyListener{
 				else
 				{
 					if(flag==0)
-						minimax.minimax_decision(pointNum);
+						action = minimax.minimax_decision(pointNum);
+						Act(action);
 //						randomAct();
 				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
@@ -452,7 +455,8 @@ public class GUI extends JFrame implements KeyListener{
 					{flag=changeturn(flag);}
 				else if(flag==0)
 				{
-					minimax.minimax_decision(pointNum);
+					action = minimax.minimax_decision(pointNum);
+					Act(action);
 //						randomAct();
 				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
@@ -485,7 +489,8 @@ public class GUI extends JFrame implements KeyListener{
 				else
 				{
 					if(flag==0)
-						minimax.minimax_decision(pointNum);
+						action = minimax.minimax_decision(pointNum);
+						Act(action);
 //						randomAct();
 				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
@@ -517,7 +522,8 @@ public class GUI extends JFrame implements KeyListener{
 			else
 			{
 				if(flag==0)
-					minimax.minimax_decision(pointNum);
+					action = minimax.minimax_decision(pointNum);
+					Act(action);
 //					randomAct();
 			}
 			System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
@@ -526,7 +532,7 @@ public class GUI extends JFrame implements KeyListener{
 
 	}
 
-	public void Eest() {
+	public void East() {
 		// TODO Auto-generated method stub
 		if(point[pointNum].d){
 			System.out.println("east");
@@ -545,7 +551,8 @@ public class GUI extends JFrame implements KeyListener{
 			else
 			{
 				if(flag==0)
-					minimax.minimax_decision(pointNum);
+					action = minimax.minimax_decision(pointNum);
+					Act(action);
 //					randomAct();
 			}
 			System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
@@ -553,9 +560,43 @@ public class GUI extends JFrame implements KeyListener{
 			
 		}
 	}
+	
+	private void Act(Action act) {
+		// TODO Auto-generated method stub
+		System.out.println("inja");
+		switch (minimax.getdirection(act.state, act.successor)) {
+		case 'a':
+			West();
+			break;
+		case 'z':
+			SouthWest();
+			break;
+		case 'x':
+			South();
+			break;
+		case 'c':
+			SouthEast();
+			break;
+		case 'd':
+			East();
+			break;
+		case 'e':
+			NorthEast();
+			break;
+		case 'w':
+			North();
+			break;
+		case 'q':
+			NorthWest();
+			break;	
+		default:
+			break;
+		}
+	}
+
+
 	Random rand=new Random();
 	
-//	minimax.minimax_decision(state);
 	public void randomAct()
 	{
 		
@@ -566,7 +607,7 @@ public class GUI extends JFrame implements KeyListener{
 		if(A==1)
 			West();
 		else if(A==2)
-			Eest();
+			East();
 		else if(A==3)
 			South();
 		else if(A==4)
