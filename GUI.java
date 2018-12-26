@@ -3,16 +3,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 import javax.swing.*;
 
 public class GUI extends JFrame implements KeyListener{
-
 	Coordinate cord = new Coordinate(245 , 362);
 	final LineComponent lineComp = new LineComponent();
+	
 	Points[]  point = new Points[105];
 	int pointNum = 49 ;
-	
+	Minimax minimax = new Minimax(pointNum,point);
+
 	public GUI() {
 		// TODO Auto-generated constructor stub
 		
@@ -89,13 +91,15 @@ public class GUI extends JFrame implements KeyListener{
 		this.add(panel,BorderLayout.CENTER);
 	
 	}
-
-	private void pointInit(Points[] point) {
+//forbidden action
+	public void pointInit(Points[] point) {
 		// TODO Auto-generated method stub
 		for (int i = 0 ; i < 105 ; i++){
+			
 			if(i>98){
 				if(i == 100 && i == 103 ){
 					point[i].adj = 5 ;
+					point[i].goal = true ;
 				}else{
 					
 					point[i].goal = true ;
@@ -211,62 +215,124 @@ public class GUI extends JFrame implements KeyListener{
 		// TODO Auto-generated method stub
 		
 	}
-
+	/*private void NoPossibleAction(int i,int adj,int flag)
+	{
+		if(i%9 == 8 || i%9 == 0||(90< i && i<93 )||
+			(95<i && i<98)||(0<i && i< 3 )|| (5<i && i<9))
+				if(adj==5)
+					System.out.println("there is no more action.player" +(flag+1)+"win");
+			
+			else if(i==3 ||i==5 ||i==93 ||i==95)
+				if(adj==3)
+						System.out.println("there is no more action.player "+(flag+1)+"win");
+				
+			else if(i==0 ||i==100||i==90 ||i==98 ||i==103 )
+				if(adj==7)
+					System.out.println("there is no more action.player "+(flag+1)+"win");
+			else
+				if(adj==8)
+					System.out.println("there is no more action.player "+(flag+1)+"win");
+	}*/
+	
+//************************************************
+	 int changeturn(int a){
+		if(a==0){
+			a=1;
+			}
+		else if(a==1)
+			a=0;
+		return a;
+	}
+	
+	
+	int flag=1;
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
+		
+		
 		if(e.getKeyCode() == KeyEvent.VK_D){
 			Eest();
+			
 			
 		}if(e.getKeyCode() == KeyEvent.VK_A){
 			West();
 			
+			
 		}if(e.getKeyCode() == KeyEvent.VK_W){
 			North();
-
+			
 			
 		}if(e.getKeyCode() == KeyEvent.VK_X){
 			South();
-
+			
 			
 		}if(e.getKeyCode() == KeyEvent.VK_E){
 			NorthEast();
 			
+			
 		}if(e.getKeyCode() == KeyEvent.VK_Q){
 			NorthWest();
 			
+			
 		}if(e.getKeyCode() == KeyEvent.VK_C){
 			SouthEast();
-			
+		
 
 		}if(e.getKeyCode() == KeyEvent.VK_Z){
 			SouthWest();
-			
+				
 		}
-	}
+		if(flag==0)
+		{
+			System.out.println("player 1 turn.");
+			minimax.minimax_decision(pointNum);
 
-	private void SouthWest() {
-		// TODO Auto-generated method stub
+//			randomAct();
+		}
+		else if(flag==1)
+		{
+			System.out.println("player2  turn.");
+		}
+	
+}
+	
+//actions;
+	public void SouthWest() {
+		
 		if(point[pointNum].z){
 			if(pointNum !=95 && pointNum != 94){
 	
 				System.out.println("south west");
 				lineComp.addLine(cord.x, cord.y, cord.x - 57 , cord.y + 57);
 				cord.update(cord ,-1, 1);
+				//NoPossibleAction(pointNum,point[pointNum].adj,flag );
 				point[pointNum].z = false ;
 				point[pointNum].adj ++ ;
-				pointNum = pointNum  + 8 ;
+				pointNum=pointNum+8;
 				point[pointNum].e = false ;
 				point[pointNum].adj ++ ;
+				if(point[pointNum].adj==8)
+					JOptionPane.showMessageDialog(null,"there is no more action.player "+(flag+1)+"win");
+				if(point[pointNum].adj<2){
+					flag=changeturn(flag);}
+				else
+					{
+						if(flag==0)
+							minimax.minimax_decision(pointNum);
+//							randomAct();
+					}
+				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{
 				lineComp.addLine(cord.x, cord.y, cord.x - 57 , cord.y + 57);
-				System.out.println("Player 2 Wins.");
+				System.out.println("Player 2 Wins.it was not player "+(flag+1)+"turn");
+				JOptionPane.showMessageDialog(null,"Player 2 Wins.it was not player "+(flag+1)+"turn");
 			}
 		}
-	}
+	
 
-	private void SouthEast() {
+	public void SouthEast() {
 		// TODO Auto-generated method stub
 		if(point[pointNum].c){
 			if(pointNum !=93 && pointNum != 94){
@@ -279,16 +345,28 @@ public class GUI extends JFrame implements KeyListener{
 				pointNum = pointNum + 10 ;
 				point[pointNum].q = false ;
 				point[pointNum].adj ++ ;
+				if(point[pointNum].adj==8)
+					JOptionPane.showMessageDialog(null,"there is no more action.player "+(flag+1)+"win");
+				//NoPossibleAction(pointNum,point[pointNum].adj,flag );
+				if(point[pointNum].adj<2)
+					flag=changeturn(flag);
+				else
+				{
+					if(flag==0)
+						minimax.minimax_decision(pointNum);
+//						randomAct();
+				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{				
 				lineComp.addLine(cord.x, cord.y, cord.x + 57 , cord.y + 57);
-				System.out.println("Player 2 Wins.");
-
+				System.out.println("Player 2 Wins.it was not player "+(flag+1)+"turn");
+				JOptionPane.showMessageDialog(null,"Player 2 Wins.it was not player "+(flag+1)+"turn");	
+				
 			}
 		}
 	}
 
-	private void NorthWest() {
+	public void NorthWest() {
 		// TODO Auto-generated method stub
 		if(point[pointNum].q){
 			if(pointNum !=5 && pointNum != 4){
@@ -296,42 +374,65 @@ public class GUI extends JFrame implements KeyListener{
 				System.out.println("north west");
 				lineComp.addLine(cord.x, cord.y, cord.x - 57 , cord.y - 57);
 				cord.update(cord ,-1, -1);
+				//NoPossibleAction(pointNum,point[pointNum].adj,flag );
 				point[pointNum].q = false ;
 				point[pointNum].adj ++ ;
 				pointNum = pointNum - 10 ; 
 				point[pointNum].c = false ;
 				point[pointNum].adj ++ ;
+				if(point[pointNum].adj==8)
+					JOptionPane.showMessageDialog(null,"there is no more action.player "+(flag+1)+"win");
+				if(point[pointNum].adj<2)
+					flag=changeturn(flag);
+				else
+				{
+					if(flag==0)
+						minimax.minimax_decision(pointNum);
+//						randomAct();
+				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{
 				lineComp.addLine(cord.x, cord.y, cord.x - 57 , cord.y - 57);
-				System.out.println("Player 1 Wins.");
-
+				System.out.println("Player 1 Wins.it was not player "+(flag+1)+"turn");
+				JOptionPane.showMessageDialog(null,"Player 1 Wins.it was not player "+(flag+1)+"turn");
 			}
 		}
 	}
 
-	private void NorthEast() {
-		// TODO Auto-generated method stub
+	public void NorthEast() {
+		
 		if(point[pointNum].e){
 			if(pointNum != 3 && pointNum != 4){
 
 				System.out.println("north east");
 				lineComp.addLine(cord.x, cord.y, cord.x + 57 , cord.y - 57);
 				cord.update(cord, 1, -1);
+				//NoPossibleAction(pointNum,point[pointNum].adj,flag );
 				point[pointNum].e = false ;
 				point[pointNum].adj ++ ;
 				pointNum = pointNum - 8 ; 
 				point[pointNum].z = false ;
 				point[pointNum].adj ++ ;
+				if(point[pointNum].adj==8)
+					JOptionPane.showMessageDialog(null,"there is no more action.player "+(flag+1)+"win");
+				if(point[pointNum].adj<2)
+					flag=changeturn(flag);
+				else
+				{
+					if(flag==0)
+						minimax.minimax_decision(pointNum);
+//						randomAct();
+				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{
 				lineComp.addLine(cord.x, cord.y, cord.x + 57 , cord.y - 57);
-				System.out.println("Player 1 Wins.");
+				System.out.println("Player 1 Wins.it was not player "+(flag+1)+"turn");
+				JOptionPane.showMessageDialog(null,"Player 1 Wins.it was not player "+(flag+1)+"turn");
 			}
 		}
 	}
 
-	private void South() {
+	public void South() {
 		// TODO Auto-generated method stub
 		if(point[pointNum].x){
 			if(pointNum !=94 ){
@@ -339,20 +440,31 @@ public class GUI extends JFrame implements KeyListener{
 				System.out.println("south");
 				lineComp.addLine(cord.x, cord.y, cord.x , cord.y + 57);
 				cord.update(cord ,0 , 1);
+				//NoPossibleAction(pointNum,point[pointNum].adj,flag );
 				point[pointNum].x = false ;
 				point[pointNum].adj ++ ;
 				pointNum = pointNum + 9 ;
 				point[pointNum].w = false ;
 				point[pointNum].adj ++ ;
+				if(point[pointNum].adj==8)
+					JOptionPane.showMessageDialog(null,"there is no more action.player "+(flag+1)+"win");
+				if(point[pointNum].adj<2)
+					{flag=changeturn(flag);}
+				else if(flag==0)
+				{
+					minimax.minimax_decision(pointNum);
+//						randomAct();
+				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{
 				lineComp.addLine(cord.x, cord.y, cord.x , cord.y + 57);
-				System.out.println("Player 2 Wins.");
+				System.out.println("Player 2 Wins.it was not player " +(flag+1)+"turn");
+				JOptionPane.showMessageDialog(null,"Player 2 Wins.it was not player "+(flag+1)+"turn");
 			}
 		}
 	}
 
-	private void North() {
+	public void North() {
 		// TODO Auto-generated method stub
 		if(point[pointNum].w){
 			if(pointNum != 4){
@@ -360,55 +472,124 @@ public class GUI extends JFrame implements KeyListener{
 				System.out.println("north");
 				lineComp.addLine(cord.x, cord.y, cord.x , cord.y - 57);
 				cord.update(cord ,0,-1);
+				//NoPossibleAction(pointNum,point[pointNum].adj,flag );
 				point[pointNum].w = false ;
 				point[pointNum].adj ++ ;
 				pointNum = pointNum - 9 ;
 				point[pointNum].x = false ;
 				point[pointNum].adj ++ ;
+				if(point[pointNum].adj==8)
+					JOptionPane.showMessageDialog(null,"there is no more action.player "+(flag+1)+"win");
+				if(point[pointNum].adj<2)
+					flag=changeturn(flag);
+				else
+				{
+					if(flag==0)
+						minimax.minimax_decision(pointNum);
+//						randomAct();
+				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{
 				lineComp.addLine(cord.x, cord.y, cord.x , cord.y - 57);
-				System.out.println("Player 1 Wins.");
+				System.out.println("Player 1 Wins. it was not player "+(flag+1)+"turn");
+				JOptionPane.showMessageDialog(null,"Player 1 Wins.it was not player "+(flag+1)+"turn");
 			}
 		}		
 	}
 
-	private void West() {
+	public void West() {
 		// TODO Auto-generated method stub
 		if(point[pointNum].a){
 
 			System.out.println("west");
 			lineComp.addLine(cord.x, cord.y, cord.x - 57, cord.y);
 			cord.update(cord,-1, 0);
+			//NoPossibleAction(pointNum,point[pointNum].adj,flag );
 			point[pointNum].a = false ;
 			point[pointNum].adj ++ ;
 			pointNum -- ;
 			point[pointNum].d = false ;
 			point[pointNum].adj ++ ;
+			if(point[pointNum].adj==8)
+				JOptionPane.showMessageDialog(null,"there is no more action.player "+(flag+1)+"win");
+			if(point[pointNum].adj<2)
+				flag=changeturn(flag);
+			else
+			{
+				if(flag==0)
+					minimax.minimax_decision(pointNum);
+//					randomAct();
+			}
 			System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
+		
 		}
 
 	}
 
-	private void Eest() {
+	public void Eest() {
 		// TODO Auto-generated method stub
 		if(point[pointNum].d){
 			System.out.println("east");
 			lineComp.addLine(cord.x, cord.y, cord.x + 57, cord.y);
 			cord.update(cord ,1,0);
+			//NoPossibleAction(pointNum,point[pointNum].adj,flag );
 			point[pointNum].d = false ;
 			point[pointNum].adj ++ ;
 			pointNum ++ ;
 			point[pointNum].a = false ;
 			point[pointNum].adj ++ ;
+			if(point[pointNum].adj==8)
+				JOptionPane.showMessageDialog(null,"there is no more action.player "+(flag+1)+"win");
+			if(point[pointNum].adj<2)
+				flag=changeturn(flag);
+			else
+			{
+				if(flag==0)
+					minimax.minimax_decision(pointNum);
+//					randomAct();
+			}
 			System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
+			
+			
 		}
 	}
-
+	Random rand=new Random();
+	
+//	minimax.minimax_decision(state);
+	public void randomAct()
+	{
+		
+		int A=rand.nextInt(8);
+		System.out.println("random"+A);
+		if(A==0)
+			North();
+		if(A==1)
+			West();
+		else if(A==2)
+			Eest();
+		else if(A==3)
+			South();
+		else if(A==4)
+			NorthEast();
+		else if(A==5)
+			NorthWest();
+		else if(A==6)
+			SouthEast();
+		else if(A==7)
+			SouthWest();
+			
+	}
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 	
+	
+	
+	
+	
+	
+	
 }
+
