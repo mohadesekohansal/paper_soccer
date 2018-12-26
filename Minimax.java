@@ -21,6 +21,7 @@ public class Minimax {
 		System.out.println(state);
 		pair = Max_Value(state);
 		action = new Action(state, pair.successor, pair.value);
+		System.out.println(action.state+" "+action.successor+" "+ action.value);
 		return action;
 
 	}
@@ -93,7 +94,7 @@ public class Minimax {
 		return pair;
 	}
 
-	private char getdirection(int current_state, int suc) {
+	public char getdirection(int current_state, int suc) {
 		// TODO Auto-generated method stub
 		int dif = current_state - suc;
 		char ch = 0;
