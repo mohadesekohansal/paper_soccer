@@ -27,7 +27,7 @@ public class GUI extends JFrame implements KeyListener{
 		JPanel panel = new JPanel();
 		JButton startButton = new JButton();
 		
-		
+		System.out.println();
 		JLabel playground = new JLabel(new ImageIcon("files/playground.jpg"));
 		JLabel player1 = new JLabel("#1");
 		JLabel player2 = new JLabel("#2");
