@@ -6,29 +6,28 @@ public class Minimax {
 	int state;
 	Action action;
 	Points[] points_copy;
-	
+
 	ArrayList<Points> po = new ArrayList<Points>();
 	int i = 0;
 
 	public Minimax(int state) {
 		// TODO Auto-generated constructor stub
 		this.state = state;
-//		this.points = points;
-		
+		// this.points = points;
+
 	}
 
-	
 	public Action minimax_decision(int state, Points[] points) {
 		Pair pair;
-//		points_copy = points.clone();
-		for(Points  p : points  ){
+		// points_copy = points.clone();
+		for (Points p : points) {
 			po.add(p);
 		}
-		System.out.println("state : "+ state);
-		pair = Max_Value(state,points);
+		System.out.println("state : " + state);
+		pair = Max_Value(state, points);
 		action = new Action(state, pair.successor, pair.value);
-		System.out.println(action.state+" "+action.successor+" "+ action.value + "       "+ points[action.state].value );
-
+		System.out.println(
+				action.state + " " + action.successor + " " + action.value + "       " + points[action.state].value);
 
 		return action;
 
@@ -39,17 +38,17 @@ public class Minimax {
 		Pair pair = null;
 		boolean max = true;
 		ArrayList<Integer> suc = new ArrayList<Integer>();
-		int utility = terminal_test(current_state, max ,points);
+		int utility = terminal_test(current_state, max, points);
 		if (utility != 0) {
 
 			return pair = new Pair(utility, 0);
 		}
-		for(Points p : points){
+		for (Points p : points) {
 			p.value = -100000;
 		}
-		suc = successor(current_state,points);
+		suc = successor(current_state, points);
 
-		 System.out.println("Max suc: " + suc + current_state);
+		System.out.println("Max suc: " + suc + current_state);
 
 		for (Integer s : suc) {
 
@@ -91,7 +90,7 @@ public class Minimax {
 			default:
 				break;
 			}
-			points[current_state].value = Math.max(points[current_state].value, Min_Value(s,points).value);
+			points[current_state].value = Math.max(points[current_state].value, Min_Value(s, points).value);
 			pair = new Pair(points[current_state].value, s);
 		}
 
@@ -139,18 +138,17 @@ public class Minimax {
 		Pair pair = null;
 		boolean min = false;
 		ArrayList<Integer> suc = new ArrayList<Integer>();
-		int utility = terminal_test(current_state, min,points);
+		int utility = terminal_test(current_state, min, points);
 		if (utility != 0) {
 
 			return pair = new Pair(utility, 0);
 		}
-		
-		for(Points p : points){
+
+		for (Points p : points) {
 			p.value = +100000;
 		}
-		
 
-		suc = successor(current_state,points);
+		suc = successor(current_state, points);
 
 		System.out.println("Min suc: " + suc + current_state);
 
@@ -194,7 +192,7 @@ public class Minimax {
 			default:
 				break;
 			}
-			points[current_state].value = Math.min(points[current_state].value, Max_Value(su,points).value);
+			points[current_state].value = Math.min(points[current_state].value, Max_Value(su, points).value);
 			pair = new Pair(points[current_state].value, su);
 
 		}
@@ -205,7 +203,25 @@ public class Minimax {
 	private ArrayList<Integer> successor(int state, Points[] points) {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> suc = new ArrayList<Integer>();
-		// if()
+		if ((state > 2 && state < 6) || (state > 92 && state < 96)) {
+			if (state == 3) {
+				suc.add(103);
+			} else if (state == 4) {
+				suc.add(102);
+				suc.add(103);
+				suc.add(104);
+			} else if (state == 5) {
+				suc.add(103);
+			} else if (state == 93) {
+				suc.add(100);
+			} else if (state == 94) {
+				suc.add(99);
+				suc.add(100);
+				suc.add(101);
+			} else if (state == 95) {
+				suc.add(100);
+			}
+		}
 		if (points[state].a) {
 			if (state - 1 > -1 && state - 1 < 99)
 				suc.add(state - 1);
@@ -238,27 +254,25 @@ public class Minimax {
 			if (state - 10 > -1 && state - 10 < 99)
 				suc.add(state - 10);
 		}
+
 		return suc;
 	}
 
 	public int terminal_test(int state, boolean flag, Points[] points) {
 		// TODO Auto-generated method stub
 		int result = 0;
-		
+
 		if (state == 99 || state == 100 || state == 101) {
 			result = +1;
-			System.out.println("bsjdhfksjdfkshdkjfhskjdfhkjsdhfksj");
 		} else if (state == 102 || state == 103 || state == 104) {
-			result = -1;
-			System.out.println("hweiurowiueroiwjskdnslkdfnlirjfilwjsdf;s");
-
+			result = +1;
 		} else if (points[state].adj == 8) {// it may have problem
 			if (flag) {
 				result = -1;
 			} else {
 				result = 1;
 			}
-		} else if (successor(state,points).isEmpty()) {
+		} else if (successor(state, points).isEmpty()) {
 			if (flag) {
 				result = -1;
 			} else {
