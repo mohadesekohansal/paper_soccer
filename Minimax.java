@@ -222,10 +222,7 @@ public class Minimax {
 				suc.add(100);
 			}
 		}
-		if (points[state].a) {
-			if (state - 1 > -1 && state - 1 < 99)
-				suc.add(state - 1);
-		}
+		
 		if (points[state].z) {
 			if (state + 8 > -1 && state + 8 < 99)
 				suc.add(state + 8);
@@ -254,6 +251,10 @@ public class Minimax {
 			if (state - 10 > -1 && state - 10 < 99)
 				suc.add(state - 10);
 		}
+		if (points[state].a) {
+			if (state - 1 > -1 && state - 1 < 99)
+				suc.add(state - 1);
+		}
 
 		return suc;
 	}
@@ -265,7 +266,7 @@ public class Minimax {
 		if (state == 99 || state == 100 || state == 101) {
 			result = +1;
 		} else if (state == 102 || state == 103 || state == 104) {
-			result = +1;
+			result = -1;
 		} else if (points[state].adj == 8) {// it may have problem
 			if (flag) {
 				result = -1;
