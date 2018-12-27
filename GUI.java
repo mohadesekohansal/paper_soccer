@@ -6,14 +6,19 @@ import java.awt.event.KeyListener;
 import java.util.Random;
 
 import javax.swing.*;
+import javax.swing.plaf.synth.SynthStyle;
 
 public class GUI extends JFrame implements KeyListener{
 	Coordinate cord = new Coordinate(245 , 362);
 	final LineComponent lineComp = new LineComponent();
 	Action action ;
-	Points[]  point = new Points[105];
+	static Points[]  point = new Points[105];
+	static Points[]  temp_point = new Points[105];
+	
+	
+
 	int pointNum = 49 ;
-	Minimax minimax = new Minimax(pointNum,point);
+	Minimax minimax = new Minimax(pointNum);
 
 	public GUI() {
 		// TODO Auto-generated constructor stub
@@ -21,7 +26,6 @@ public class GUI extends JFrame implements KeyListener{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panel = new JPanel();
 		JButton startButton = new JButton();
-		
 		
 		
 		JLabel playground = new JLabel(new ImageIcon("files/playground.jpg"));
@@ -70,13 +74,27 @@ public class GUI extends JFrame implements KeyListener{
 		
 		
 		for(int i = 0 ; i<105 ; i++){
-			Points point1 = new Points(true, true, true, true, true, true, true, true, false,0);
+			Points point1 = new Points(true, true, true, true, true, true, true, true, false,0,0);
 			point[i] = point1 ;
+//			temp_point[i] = point1 ;
 		}
 		pointInit(point);
+//		System.arraycopy(point, 0, temp_point, 0, point.length);
+		System.out.println(point[99].value);
+		
+		init_temp_point();
 		
 		lineComp.setPreferredSize(new Dimension(400, 600));
-	
+		
+//		System.out.println(point[46].a);
+//		System.out.println(temp_point[46].a);
+
+//		action = minimax.minimax_decision(pointNum,temp_point);
+		
+//		System.out.println(point[46].a);		
+//		System.out.println(temp_point[46].a);
+//
+
 		startButton.setOpaque(true);
 
 		startButton.setBounds(245, 362, 6, 6);
@@ -91,8 +109,15 @@ public class GUI extends JFrame implements KeyListener{
 		this.add(panel,BorderLayout.CENTER);
 	
 	}
+	private void init_temp_point() {
+		// TODO Auto-generated method stub
+		for (int i = 0; i < point.length; i++) {
+			
+			temp_point[i] =new  Points(point[i].a, point[i].q, point[i].w, point[i].d,point[i].e, point[i].x, point[i].z, point[i].c, point[i].goal, point[i].adj,point[i].value) ;
+		}
+	}
 //forbidden action
-	public void pointInit(Points[] point) {
+	private void pointInit(Points[] point) {
 		// TODO Auto-generated method stub
 		for (int i = 0 ; i < 105 ; i++){
 			
@@ -100,10 +125,57 @@ public class GUI extends JFrame implements KeyListener{
 				if(i == 100 && i == 103 ){
 					point[i].adj = 5 ;
 					point[i].goal = true ;
+					if(i == 100){
+						point[i].d = false;
+						point[i].c = false;
+						point[i].a = false;
+						point[i].z = false;
+						point[i].x = false;
+					}else{
+						
+						point[i].d = false;
+						point[i].e = false;
+						point[i].w = false;
+						point[i].q = false;
+						point[i].a = false;
+					}
 				}else{
 					
 					point[i].goal = true ;
 					point[i].adj = 7 ;
+					if(i == 99){
+						point[i].d = false;
+						point[i].c = false;
+						point[i].w = false;
+						point[i].q = false;
+						point[i].a = false;
+						point[i].z = false;
+						point[i].x = false;
+					}else if( i == 101){
+						point[i].d = false;
+						point[i].e = false;
+						point[i].w = false;
+						point[i].c = false;
+						point[i].a = false;
+						point[i].z = false;
+						point[i].x = false;
+					}else if(i == 102){
+						point[i].d = false;
+						point[i].e = false;
+						point[i].w = false;
+						point[i].q = false;
+						point[i].a = false;
+						point[i].z = false;
+						point[i].x = false;
+					}else if(i == 104){
+						point[i].d = false;
+						point[i].e = false;
+						point[i].w = false;
+						point[i].q = false;
+						point[i].a = false;
+						point[i].c = false;
+						point[i].x = false;
+					}
 
 				}
 			}
@@ -207,7 +279,6 @@ public class GUI extends JFrame implements KeyListener{
 
 			}
 		}
-		
 	}
 
 	@Override
@@ -286,7 +357,8 @@ public class GUI extends JFrame implements KeyListener{
 		if(flag==0)
 		{
 			System.out.println("player 1 turn.");
-			action = minimax.minimax_decision(pointNum);
+			init_temp_point();
+			action = minimax.minimax_decision(pointNum,temp_point);
 			Act(action);
 //			randomAct();
 		}
@@ -318,10 +390,12 @@ public class GUI extends JFrame implements KeyListener{
 					flag=changeturn(flag);}
 				else
 					{
-						if(flag==0)
-							action = minimax.minimax_decision(pointNum);
+						if(flag==0){
+							init_temp_point();
+							action = minimax.minimax_decision(pointNum,temp_point);
 							Act(action);
 //							randomAct();
+						}
 					}
 				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
@@ -352,10 +426,12 @@ public class GUI extends JFrame implements KeyListener{
 					flag=changeturn(flag);
 				else
 				{
-					if(flag==0)
-						action = minimax.minimax_decision(pointNum);
+					if(flag==0){
+						init_temp_point();
+						action = minimax.minimax_decision(pointNum,temp_point);
 						Act(action);
 //						randomAct();
+					}
 				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{				
@@ -387,10 +463,12 @@ public class GUI extends JFrame implements KeyListener{
 					flag=changeturn(flag);
 				else
 				{
-					if(flag==0)
-						action = minimax.minimax_decision(pointNum);
+					if(flag==0){
+						init_temp_point();
+						action = minimax.minimax_decision(pointNum,temp_point);
 						Act(action);
 //						randomAct();
+					}
 				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{
@@ -421,10 +499,12 @@ public class GUI extends JFrame implements KeyListener{
 					flag=changeturn(flag);
 				else
 				{
-					if(flag==0)
-						action = minimax.minimax_decision(pointNum);
+					if(flag==0){
+						init_temp_point();
+						action = minimax.minimax_decision(pointNum,temp_point);
 						Act(action);
 //						randomAct();
+					}
 				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{
@@ -455,7 +535,8 @@ public class GUI extends JFrame implements KeyListener{
 					{flag=changeturn(flag);}
 				else if(flag==0)
 				{
-					action = minimax.minimax_decision(pointNum);
+					init_temp_point();
+					action = minimax.minimax_decision(pointNum,temp_point);
 					Act(action);
 //						randomAct();
 				}
@@ -488,10 +569,12 @@ public class GUI extends JFrame implements KeyListener{
 					flag=changeturn(flag);
 				else
 				{
-					if(flag==0)
-						action = minimax.minimax_decision(pointNum);
+					if(flag==0){
+						init_temp_point();
+						action = minimax.minimax_decision(pointNum,temp_point);
 						Act(action);
 //						randomAct();
+						}
 				}
 				System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			}else{
@@ -521,10 +604,12 @@ public class GUI extends JFrame implements KeyListener{
 				flag=changeturn(flag);
 			else
 			{
-				if(flag==0)
-					action = minimax.minimax_decision(pointNum);
+				if(flag==0){
+					init_temp_point();
+					action = minimax.minimax_decision(pointNum,temp_point);
 					Act(action);
 //					randomAct();
+				}
 			}
 			System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 		
@@ -550,10 +635,12 @@ public class GUI extends JFrame implements KeyListener{
 				flag=changeturn(flag);
 			else
 			{
-				if(flag==0)
-					action = minimax.minimax_decision(pointNum);
+				if(flag==0){
+					init_temp_point();
+					action = minimax.minimax_decision(pointNum,temp_point);
 					Act(action);
 //					randomAct();
+				}
 			}
 			System.out.println("point num : "+ pointNum+"  ["+cord.x +", "+cord.y+"]");
 			
@@ -563,7 +650,7 @@ public class GUI extends JFrame implements KeyListener{
 	
 	private void Act(Action act) {
 		// TODO Auto-generated method stub
-		System.out.println("inja");
+		System.out.println(minimax.getdirection(act.state, act.successor));
 		switch (minimax.getdirection(act.state, act.successor)) {
 		case 'a':
 			West();

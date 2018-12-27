@@ -11,8 +11,9 @@ public class Points {
 	boolean e = true;
 	boolean goal = false ;
 	int adj = 0 ;
+	int value = 0 ;
 	
-	public Points(boolean a, boolean q, boolean w, boolean d, boolean e, boolean x, boolean z, boolean c, boolean goal, int adj) {
+	public Points(boolean a, boolean q, boolean w, boolean d, boolean e, boolean x, boolean z, boolean c, boolean goal, int adj,int value) {
 		// TODO Auto-generated constructor stub
 		this.a = a ;
 		this.q = q ;
@@ -24,6 +25,7 @@ public class Points {
 		this.z = z ;
 		this.goal = goal ;
 		this.adj = adj ;
+		this.value = value ; 
 	
 	}
 
