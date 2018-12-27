@@ -5,51 +5,55 @@ public class Minimax {
 
 	int state;
 	Action action;
-	Points[] point;
-	Points[] points;
+	Points[] points_copy;
+	
+	ArrayList<Points> po = new ArrayList<Points>();
 	int i = 0;
 
-	public Minimax(int state, Points[] point) {
+	public Minimax(int state) {
 		// TODO Auto-generated constructor stub
 		this.state = state;
-		this.point = point;
-		points = point;
+//		this.points = points;
+		
 	}
 
-	public Action minimax_decision(int state) {
+	
+	public Action minimax_decision(int state, Points[] points) {
 		Pair pair;
-		System.out.println(state);
-		pair = Max_Value(state);
+//		points_copy = points.clone();
+		for(Points  p : points  ){
+			po.add(p);
+		}
+		System.out.println("state : "+ state);
+		pair = Max_Value(state,points);
 		action = new Action(state, pair.successor, pair.value);
-		System.out.println(action.state+" "+action.successor+" "+ action.value);
+		System.out.println(action.state+" "+action.successor+" "+ action.value + "       "+ points[action.state].value );
+
+
 		return action;
 
 	}
 
-	private Pair Max_Value(int current_state) {
+	private Pair Max_Value(int current_state, Points[] points) {
 		// TODO Auto-generated method stub
 		Pair pair = null;
 		boolean max = true;
 		ArrayList<Integer> suc = new ArrayList<Integer>();
-		int utility = terminal_test(current_state, max);
+		int utility = terminal_test(current_state, max ,points);
 		if (utility != 0) {
 
 			return pair = new Pair(utility, 0);
 		}
-		int v = -100000;
-		// if(i<100){
-		System.out.println("Max succ: " + successor(current_state) + current_state);
-		i++;
-		// }
-		suc = successor(current_state);
+		for(Points p : points){
+			p.value = -100000;
+		}
+		suc = successor(current_state,points);
 
-		// System.out.println("Max suc: " + suc + current_state);
+		 System.out.println("Max suc: " + suc + current_state);
 
 		for (Integer s : suc) {
-			// if(i<100){
 
 			System.out.println("Max " + s);
-			// }
 
 			switch (getdirection(current_state, s)) {
 			case 'a':
@@ -87,8 +91,8 @@ public class Minimax {
 			default:
 				break;
 			}
-			v = Math.max(v, Min_Value(s).value);
-			pair = new Pair(v, s);
+			points[current_state].value = Math.max(points[current_state].value, Min_Value(s,points).value);
+			pair = new Pair(points[current_state].value, s);
 		}
 
 		return pair;
@@ -130,31 +134,29 @@ public class Minimax {
 		return ch;
 	}
 
-	private Pair Min_Value(int current_state) {
+	private Pair Min_Value(int current_state, Points[] points) {
 		// TODO Auto-generated method stub
 		Pair pair = null;
 		boolean min = false;
 		ArrayList<Integer> suc = new ArrayList<Integer>();
-		int utility = terminal_test(current_state, min);
-		// System.out.println(terminal_test(current_state ,min));
+		int utility = terminal_test(current_state, min,points);
 		if (utility != 0) {
 
 			return pair = new Pair(utility, 0);
 		}
-		int v = 100000;
-		// if(i<100){
+		
+		for(Points p : points){
+			p.value = +100000;
+		}
+		
 
-		System.out.println("Min succ: " + successor(current_state) + current_state);
-		// i++;}
-		suc = successor(current_state);
+		suc = successor(current_state,points);
 
-		// System.out.println("Min suc: " + suc + current_state);
+		System.out.println("Min suc: " + suc + current_state);
 
 		for (Integer su : suc) {
 
-			// if(i<100){
 			System.out.println("Min " + su);
-			// }
 
 			switch (getdirection(current_state, su)) {
 			case 'a':
@@ -192,15 +194,15 @@ public class Minimax {
 			default:
 				break;
 			}
-			v = Math.min(v, Max_Value(su).value);
-			pair = new Pair(v, su);
+			points[current_state].value = Math.min(points[current_state].value, Max_Value(su,points).value);
+			pair = new Pair(points[current_state].value, su);
 
 		}
 
 		return pair;
 	}
 
-	private ArrayList<Integer> successor(int state) {
+	private ArrayList<Integer> successor(int state, Points[] points) {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> suc = new ArrayList<Integer>();
 		// if()
@@ -239,20 +241,24 @@ public class Minimax {
 		return suc;
 	}
 
-	public int terminal_test(int state, boolean flag) {
+	public int terminal_test(int state, boolean flag, Points[] points) {
 		// TODO Auto-generated method stub
 		int result = 0;
+		
 		if (state == 99 || state == 100 || state == 101) {
-			result = 1;
+			result = +1;
+			System.out.println("bsjdhfksjdfkshdkjfhskjdfhkjsdhfksj");
 		} else if (state == 102 || state == 103 || state == 104) {
 			result = -1;
-		} else if (point[state].adj == 8) {
+			System.out.println("hweiurowiueroiwjskdnslkdfnlirjfilwjsdf;s");
+
+		} else if (points[state].adj == 8) {// it may have problem
 			if (flag) {
 				result = -1;
 			} else {
 				result = 1;
 			}
-		} else if (successor(state).isEmpty()) {
+		} else if (successor(state,points).isEmpty()) {
 			if (flag) {
 				result = -1;
 			} else {
