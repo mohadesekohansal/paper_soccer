@@ -7,7 +7,6 @@ public class Minimax {
 	Action action;
 	Points[] points_copy;
 
-	ArrayList<Points> po = new ArrayList<Points>();
 	int i = 0;
 
 	public Minimax(int state) {
@@ -20,11 +19,9 @@ public class Minimax {
 	public Action minimax_decision(int state, Points[] points) {
 		Pair pair;
 		// points_copy = points.clone();
-		for (Points p : points) {
-			po.add(p);
-		}
+		
 		System.out.println("state : " + state);
-		pair = Max_Value(state, points);
+		pair = Max_Value(state, points,-100000, +100000);
 		action = new Action(state, pair.successor, pair.value);
 		System.out.println(
 				action.state + " " + action.successor + " " + action.value + "       " + points[action.state].value);
@@ -33,7 +30,7 @@ public class Minimax {
 
 	}
 
-	private Pair Max_Value(int current_state, Points[] points) {
+	private Pair Max_Value(int current_state, Points[] points, int alpha, int beta) {
 		// TODO Auto-generated method stub
 		Pair pair = null;
 		boolean max = true;
@@ -50,7 +47,7 @@ public class Minimax {
 
 //		System.out.println("Max suc: " + suc + current_state);
 
-		for (Integer s : suc) {
+		for (int s : suc) {
 
 //			System.out.println("Max " + s);
 
@@ -90,50 +87,20 @@ public class Minimax {
 			default:
 				break;
 			}
-			points[current_state].value = Math.max(points[current_state].value, Min_Value(s, points).value);
+			points[current_state].value = Math.max(points[current_state].value, Min_Value(s, points,alpha,beta).value);
 			pair = new Pair(points[current_state].value, s);
+			if(points[current_state].value >= beta){
+				return pair;
+			}
+			alpha = Math.max(alpha, points[current_state].value);
+			points[current_state].adj ++ ;
+			points[s].adj ++ ;
 		}
 
 		return pair;
 	}
 
-	public char getdirection(int current_state, int suc) {
-		// TODO Auto-generated method stub
-		int dif = current_state - suc;
-		char ch = 0;
-		switch (dif) {
-		case +1:
-			ch = 'a';
-			break;
-		case -1:
-			ch = 'd';
-			break;
-		case -8:
-			ch = 'z';
-			break;
-		case -9:
-			ch = 'x';
-			break;
-		case -10:
-			ch = 'c';
-			break;
-		case 8:
-			ch = 'e';
-			break;
-		case 9:
-			ch = 'w';
-			break;
-		case 10:
-			ch = 'q';
-			break;
-
-		default:
-			break;
-		}
-		return ch;
-	}
-
-	private Pair Min_Value(int current_state, Points[] points) {
+	private Pair Min_Value(int current_state, Points[] points, int alpha, int beta) {
 		// TODO Auto-generated method stub
 		Pair pair = null;
 		boolean min = false;
@@ -152,7 +119,7 @@ public class Minimax {
 
 //		System.out.println("Min suc: " + suc + current_state);
 
-		for (Integer su : suc) {
+		for (int su : suc) {
 
 //			System.out.println("Min " + su);
 
@@ -192,12 +159,55 @@ public class Minimax {
 			default:
 				break;
 			}
-			points[current_state].value = Math.min(points[current_state].value, Max_Value(su, points).value);
+			points[current_state].value = Math.min(points[current_state].value, Max_Value(su, points,alpha,beta).value);
 			pair = new Pair(points[current_state].value, su);
+			if(points[current_state].value <= alpha){
+				return pair;
+			}
+			beta = Math.min(beta, points[current_state].value);
 
+			points[current_state].adj ++ ;
+			points[su].adj ++ ;
 		}
 
 		return pair;
+	}
+
+	
+	public char getdirection(int current_state, int suc) {
+		// TODO Auto-generated method stub
+		int dif = current_state - suc;
+		char ch = 0;
+		switch (dif) {
+		case +1:
+			ch = 'a';
+			break;
+		case -1:
+			ch = 'd';
+			break;
+		case -8:
+			ch = 'z';
+			break;
+		case -9:
+			ch = 'x';
+			break;
+		case -10:
+			ch = 'c';
+			break;
+		case 8:
+			ch = 'e';
+			break;
+		case 9:
+			ch = 'w';
+			break;
+		case 10:
+			ch = 'q';
+			break;
+
+		default:
+			break;
+		}
+		return ch;
 	}
 
 	private ArrayList<Integer> successor(int state, Points[] points) {
@@ -210,8 +220,10 @@ public class Minimax {
 				suc.add(102);
 				suc.add(103);
 				suc.add(104);
+
 			} else if (state == 5) {
 				suc.add(103);
+
 			} else if (state == 93) {
 				suc.add(100);
 			} else if (state == 94) {
@@ -222,14 +234,7 @@ public class Minimax {
 				suc.add(100);
 			}
 		}
-		if (points[state].x) {
-			if (state + 9 > -1 && state + 9 < 99)
-				suc.add(state + 9);
-		}
-		if (points[state].c) {
-			if (state + 10 > -1 && state + 10 < 99)
-				suc.add(state + 10);
-		}
+		
 		if (points[state].d) {
 			if (state + 1 > -1 && state + 1 < 99)
 				suc.add(state + 1);
@@ -250,6 +255,14 @@ public class Minimax {
 			if (state - 1 > -1 && state - 1 < 99)
 				suc.add(state - 1);
 		}
+		if (points[state].x) {
+			if (state + 9 > -1 && state + 9 < 99)
+				suc.add(state + 9);
+		}
+		if (points[state].c) {
+			if (state + 10 > -1 && state + 10 < 99)
+				suc.add(state + 10);
+		}
 		if (points[state].z) {
 			if (state + 8 > -1 && state + 8 < 99)
 				suc.add(state + 8);
@@ -261,7 +274,7 @@ public class Minimax {
 	public int terminal_test(int state, boolean flag, Points[] points) {
 		// TODO Auto-generated method stub
 		int result = 0;
-
+//		System.out.println(state  + "     " + successor(state, points).size() );
 		if (state == 99 || state == 100 || state == 101) {
 			result = -10;
 		} else if (state == 102 || state == 103 || state == 104) {
