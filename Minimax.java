@@ -48,11 +48,11 @@ public class Minimax {
 		}
 		suc = successor(current_state, points);
 
-		System.out.println("Max suc: " + suc + current_state);
+//		System.out.println("Max suc: " + suc + current_state);
 
 		for (Integer s : suc) {
 
-			System.out.println("Max " + s);
+//			System.out.println("Max " + s);
 
 			switch (getdirection(current_state, s)) {
 			case 'a':
@@ -150,11 +150,11 @@ public class Minimax {
 
 		suc = successor(current_state, points);
 
-		System.out.println("Min suc: " + suc + current_state);
+//		System.out.println("Min suc: " + suc + current_state);
 
 		for (Integer su : suc) {
 
-			System.out.println("Min " + su);
+//			System.out.println("Min " + su);
 
 			switch (getdirection(current_state, su)) {
 			case 'a':
@@ -222,11 +222,6 @@ public class Minimax {
 				suc.add(100);
 			}
 		}
-		
-		if (points[state].z) {
-			if (state + 8 > -1 && state + 8 < 99)
-				suc.add(state + 8);
-		}
 		if (points[state].x) {
 			if (state + 9 > -1 && state + 9 < 99)
 				suc.add(state + 9);
@@ -255,6 +250,10 @@ public class Minimax {
 			if (state - 1 > -1 && state - 1 < 99)
 				suc.add(state - 1);
 		}
+		if (points[state].z) {
+			if (state + 8 > -1 && state + 8 < 99)
+				suc.add(state + 8);
+		}
 
 		return suc;
 	}
@@ -264,9 +263,9 @@ public class Minimax {
 		int result = 0;
 
 		if (state == 99 || state == 100 || state == 101) {
-			result = +1;
+			result = -10;
 		} else if (state == 102 || state == 103 || state == 104) {
-			result = -1;
+			result = +10;
 		} else if (points[state].adj == 8) {// it may have problem
 			if (flag) {
 				result = -1;
